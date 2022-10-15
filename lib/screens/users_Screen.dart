@@ -1,41 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:store_api_flutter_course/models/users_model.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:store_api_flutter_course/widgets/users-widget.dart';
+import '../prodivers/data_provider.dart';
 
-import '../services/api_handler.dart';
-
-class UsersScreen extends StatelessWidget {
+class UsersScreen extends ConsumerWidget {
   const UsersScreen({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _data = ref.watch(userScreen);
     return Scaffold(
-        appBar: AppBar(
-          // elevation: 4,
-          title: const Text('Users'),
-        ),
-        body: FutureBuilder<List<UsersModel>>(
-            future: APIHandler.getAppUsers(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('An Error occurred ${snapshot.error}'),
-                );
-              } else if (snapshot.data == null) {
-                return const Center(
-                  child: Text('No Products Found'),
-                );
-              }
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return ChangeNotifierProvider.value(
-                      value: snapshot.data![index], child: const UsersWidget());
+      appBar: AppBar(
+        // elevation: 4,
+        title: const Text('Users'),
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            _data.when(
+                data: (_data) {
+                  List users = _data.map((e) => e).toList();
+                  return Column(
+                    children: [
+                      ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: 5,
+                        itemBuilder: (_, index) {
+                          return UsersWidget(
+                            usersModel: users[index],
+                          );
+                        },
+                      )
+                    ],
+                  );
                 },
-              );
-            }));
+                error: (err, r) => Padding(
+                    padding: const EdgeInsets.only(left: 25, right: 25),
+                    child: Text('Error:$err')),
+                loading: () => const Center(
+                      child: CircularProgressIndicator(),
+                    ))
+          ],
+        ),
+      ),
+    );
   }
 }

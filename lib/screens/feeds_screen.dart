@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import '../models/products_model.dart';
 import '../services/api_handler.dart';
 import '../widgets/feeds_widget.dart';
@@ -76,9 +75,9 @@ class _FeedsScreenState extends State<FeedsScreen> {
                               mainAxisSpacing: 0.0,
                               childAspectRatio: 0.7),
                       itemBuilder: (context, index) {
-                        return ChangeNotifierProvider.value(
-                            value: productsList[index],
-                            child: const FeedsWidget());
+                        return FeedsWidget(
+                          productsModel: productsList[index],
+                        );
                       }),
                   if (!_isLimit)
                     const Center(

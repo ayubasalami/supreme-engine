@@ -1,6 +1,7 @@
 import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_iconly/flutter_iconly.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:store_api_flutter_course/consts/global_colors.dart';
 import 'package:store_api_flutter_course/screens/category_screen.dart';
@@ -8,34 +9,17 @@ import 'package:store_api_flutter_course/screens/feeds_screen.dart';
 import 'package:store_api_flutter_course/screens/users_Screen.dart';
 import 'package:store_api_flutter_course/services/api_handler.dart';
 import '../models/products_model.dart';
+import '../prodivers/data_provider.dart';
 import '../widgets/appbar_icons.dart';
 import '../widgets/feeds_grid.dart';
 import '../widgets/sale_widget.dart';
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class HomeScreen extends ConsumerWidget {
+  final TextEditingController _textEditingController = TextEditingController();
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  late TextEditingController _textEditingController;
-
-  @override
-  void initState() {
-    _textEditingController = TextEditingController();
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _textEditingController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _data = ref.watch(userDataProvider);
     Size size = MediaQuery.of(context).size;
 
     return GestureDetector(
@@ -51,8 +35,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade,
-                      child: const CategoryScreen()));
+                      type: PageTransitionType.fade, child: CategoryScreen()));
             },
             icon: IconlyBold.category,
           ),
@@ -146,26 +129,41 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      FutureBuilder<List<ProductsModel>>(
-                          future: APIHandler.getAppProducts(limit: '4'),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return const Center(
-                                  child: CircularProgressIndicator());
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                child:
-                                    Text('An Error occurred ${snapshot.error}'),
-                              );
-                            } else if (snapshot.data == null) {
-                              return const Center(
-                                child: Text('No Products Found'),
-                              );
-                            }
-                            return FeedsGridWidget(
-                                productsList: snapshot.data!);
-                          })
+                      // FutureBuilder<List<ProductsModel>>(
+                      //     future: APIHandler.getAppProducts(limit: '4'),
+                      //     builder: (context, snapshot) {
+                      //       if (snapshot.connectionState ==
+                      //           ConnectionState.waiting) {
+                      //         return const Center(
+                      //             child: CircularProgressIndicator());
+                      //       } else if (snapshot.hasError) {
+                      //         return Center(
+                      //           child:
+                      //               Text('An Error occurred ${snapshot.error}'),
+                      //         );
+                      //       } else if (snapshot.data == null) {
+                      //         return const Center(
+                      //           child: Text('No Products Found'),
+                      //         );
+                      //       }
+                      //       return FeedsGridWidget(
+                      //           productsList: snapshot.data!);
+                      //     })
+                      Column(
+                        children: [
+                          _data.when(
+                              data: (_data) {
+                                List<ProductsModel> productlist =
+                                    _data.map((e) => e).toList();
+                                return FeedsGridWidget(
+                                    productsList: productlist);
+                              },
+                              error: (err, s) => Text(err.toString()),
+                              loading: () => const Center(
+                                    child: CircularProgressIndicator(),
+                                  )),
+                        ],
+                      )
                     ],
                   ),
                 ),

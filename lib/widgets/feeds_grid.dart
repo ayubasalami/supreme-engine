@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:store_api_flutter_course/widgets/feeds_widget.dart';
 
 import '../models/products_model.dart';
 
 class FeedsGridWidget extends StatelessWidget {
   FeedsGridWidget({Key? key, required this.productsList}) : super(key: key);
-  List<ProductsModel> productsList = [];
+  List<ProductsModel> productsList;
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +20,11 @@ class FeedsGridWidget extends StatelessWidget {
             mainAxisSpacing: 0.0,
             childAspectRatio: 0.6),
         itemBuilder: (context, index) {
-          return ChangeNotifierProvider.value(
-              value: productsList[index], child: const FeedsWidget());
+          // return ChangeNotifierProvider(
+          //     value: productsList[index], child: const FeedsWidget());
+          return FeedsWidget(
+            productsModel: productsList[index],
+          );
         });
   }
 }

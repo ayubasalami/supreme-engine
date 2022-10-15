@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'consts/global_colors.dart';
 import 'screens/home_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    const ProviderScope(child: MyApp()),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -33,19 +35,12 @@ class MyApp extends StatelessWidget {
         iconTheme: IconThemeData(
           color: lightIconsColor,
         ),
-
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.black,
           selectionColor: Colors.blue,
 
           // selectionHandleColor: Colors.blue,
         ),
-
-        // textTheme: TextTheme()
-        // textTheme: Theme.of(context).textTheme.apply(
-        //       bodyColor: Colors.black,
-        //       displayColor: Colors.black,
-        //     ),
         cardColor: lightCardColor,
         brightness: Brightness.light,
         colorScheme: ThemeData().colorScheme.copyWith(
@@ -53,7 +48,7 @@ class MyApp extends StatelessWidget {
               brightness: Brightness.light,
             ),
       ),
-      home: const HomeScreen(),
+      home: HomeScreen(),
     );
   }
 }

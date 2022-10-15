@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:riverpod/riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:store_api_flutter_course/consts/api_consts.dart';
 import 'package:store_api_flutter_course/models/categories_model.dart';
@@ -39,12 +39,12 @@ class APIHandler {
     return ProductsModel.productsFromSnapshot(temp);
   }
 
-  static Future<List<CategoryModel>> getAppCategories() async {
+  Future<List<CategoryModel>> getAppCategories() async {
     List temp = await getData(target: 'categories');
     return CategoryModel.categoryFromSnapshot(temp);
   }
 
-  static Future<List<UsersModel>> getAppUsers() async {
+  Future<List<UsersModel>> getAppUsers() async {
     List temp = await getData(target: 'users');
     return UsersModel.usersFromSnapshot(temp);
   }
@@ -69,3 +69,5 @@ class APIHandler {
     }
   }
 }
+
+final userProvider = Provider<APIHandler>((ref) => APIHandler());
