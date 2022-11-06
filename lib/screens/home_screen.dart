@@ -7,7 +7,6 @@ import 'package:store_api_flutter_course/consts/global_colors.dart';
 import 'package:store_api_flutter_course/screens/category_screen.dart';
 import 'package:store_api_flutter_course/screens/feeds_screen.dart';
 import 'package:store_api_flutter_course/screens/users_Screen.dart';
-import 'package:store_api_flutter_course/services/api_handler.dart';
 import '../models/products_model.dart';
 import '../prodivers/data_provider.dart';
 import '../widgets/appbar_icons.dart';
@@ -16,6 +15,8 @@ import '../widgets/sale_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   final TextEditingController _textEditingController = TextEditingController();
+
+  HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,14 +29,14 @@ class HomeScreen extends ConsumerWidget {
       },
       child: Scaffold(
         appBar: AppBar(
-          // elevation: 4,
           title: const Text('Home'),
           leading: AppBarIcons(
             function: () {
               Navigator.push(
                   context,
                   PageTransition(
-                      type: PageTransitionType.fade, child: CategoryScreen()));
+                      type: PageTransitionType.fade,
+                      child: const CategoryScreen()));
             },
             icon: IconlyBold.category,
           ),
@@ -129,26 +130,6 @@ class HomeScreen extends ConsumerWidget {
                           ],
                         ),
                       ),
-                      // FutureBuilder<List<ProductsModel>>(
-                      //     future: APIHandler.getAppProducts(limit: '4'),
-                      //     builder: (context, snapshot) {
-                      //       if (snapshot.connectionState ==
-                      //           ConnectionState.waiting) {
-                      //         return const Center(
-                      //             child: CircularProgressIndicator());
-                      //       } else if (snapshot.hasError) {
-                      //         return Center(
-                      //           child:
-                      //               Text('An Error occurred ${snapshot.error}'),
-                      //         );
-                      //       } else if (snapshot.data == null) {
-                      //         return const Center(
-                      //           child: Text('No Products Found'),
-                      //         );
-                      //       }
-                      //       return FeedsGridWidget(
-                      //           productsList: snapshot.data!);
-                      //     })
                       Column(
                         children: [
                           _data.when(
