@@ -24,7 +24,7 @@ class UsersScreen extends ConsumerWidget {
                     children: [
                       ListView.builder(
                         shrinkWrap: true,
-                        itemCount: 5,
+                        itemCount: users.length,
                         itemBuilder: (_, index) {
                           return UsersWidget(
                             usersModel: users[index],
