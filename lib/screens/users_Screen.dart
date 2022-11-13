@@ -11,36 +11,29 @@ class UsersScreen extends ConsumerWidget {
     final _data = ref.watch(userScreen);
     return Scaffold(
       appBar: AppBar(
-        // elevation: 4,
         title: const Text('Users'),
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            _data.when(
-                data: (_data) {
-                  List users = _data.map((e) => e).toList();
-                  return Column(
-                    children: [
-                      ListView.builder(
-                        shrinkWrap: true,
-                        itemCount: users.length,
-                        itemBuilder: (_, index) {
-                          return UsersWidget(
-                            usersModel: users[index],
-                          );
-                        },
-                      )
-                    ],
-                  );
-                },
-                error: (err, r) => Padding(
-                    padding: const EdgeInsets.only(left: 25, right: 25),
-                    child: Text('Error:$err')),
-                loading: () => const Center(
-                      child: CircularProgressIndicator(),
-                    ))
-          ],
+      body: _data.when(
+        data: (_data) {
+          List users = _data.map((e) => e).toList();
+          return ListView.builder(
+            shrinkWrap: true,
+            itemCount: users.length,
+            itemBuilder: (_, index) {
+              return SingleChildScrollView(
+                child: UsersWidget(
+                  usersModel: users[index],
+                ),
+              );
+            },
+          );
+        },
+        error: (err, r) => Padding(
+          padding: const EdgeInsets.only(left: 25, right: 25),
+          child: Text('Error:$err'),
+        ),
+        loading: () => const Center(
+          child: CircularProgressIndicator(),
         ),
       ),
     );
