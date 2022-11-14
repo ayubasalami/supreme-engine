@@ -48,8 +48,6 @@ class MyApp extends StatelessWidget {
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Colors.black,
           selectionColor: Colors.blue,
-
-          // selectionHandleColor: Colors.blue,
         ),
         cardColor: lightCardColor,
         brightness: Brightness.light,
